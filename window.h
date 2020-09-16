@@ -1,3 +1,4 @@
+#include <QMainWindow>
 #include <QWidget>
 #include <QToolBar>
 #include <QAction>
@@ -13,20 +14,19 @@ class QMouseEvent;
 class QMenuBar;
 class QMenu;
 
-class Window : public QWidget
+class Window : public QMainWindow
 {
 	Q_OBJECT
 	private:
 		QGraphicsScene* m_scene;
 		Canvas* m_canvas;
-		QHBoxLayout* m_layout;
-		QMenuBar* m_menubar;
+		QMenu* m_menu;
 		QToolBar* m_toolbar;
-		QMenu* m_filemenu;
-		QMenu* m_savemenu;
-		QMenu* m_printmenu;
-		QMenu* m_importmenu;
-		QMenu* m_newmenu;
+		QAction* m_filemenu;
+		QAction* m_savemenu;
+		QAction* m_printmenu;
+		QAction* m_importmenu;
+		QAction* m_newmenu;
 		QAction* m_rect;
 		QAction* m_circle;
 		QAction* m_triangle;

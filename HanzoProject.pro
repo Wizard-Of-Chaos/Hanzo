@@ -21,3 +21,4 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # Input
 HEADERS += canvas.h window.h
 SOURCES += canvas.cpp main.cpp window.cpp
+CONFIG += debug

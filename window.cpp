@@ -12,19 +12,21 @@
 #include <QToolButton>
 #include <QAction>
 
-Window::Window() : QWidget()
+Window::Window() : QMainWindow()
 {	
     m_selected_tool = 0; 
-	m_menubar = new QMenuBar(this);
-	m_toolbar = new QToolBar(this);  //Morgan Magner
-	m_filemenu = new QMenu(tr("File"), this);
-	m_newmenu = new QMenu(tr("New"), this);
-	m_importmenu = new QMenu(tr("Import"), this);
-	m_printmenu = new QMenu(tr("Print"), this);
-	m_savemenu = new QMenu(tr("Save"), this);
-	m_layout = new QHBoxLayout;
+	//m_menubar = new QMenuBar(this);
+    	m_menu = menuBar()->addMenu(tr("&File"));
+	//m_toolbar = new QToolBar(this);  //Morgan Magner
+	m_toolbar = addToolBar(tr("File"));
+	m_newmenu = new QAction(tr("New"));
+	m_importmenu = new QAction(tr("Import"));
+	m_printmenu = new QAction(tr("Print"));
+	m_savemenu = new QAction(tr("Save"));
 	m_scene = new QGraphicsScene(this);
-	m_canvas = new Canvas(&m_selected_tool);
+	m_canvas = new Canvas;
+
+	m_canvas->setScene(m_scene);
         
 /*	m_rect = new QToolButton();  //Morgan Magner   -- start of QToolBar
 	m_rect->setIcon(Rectangle.png);  //change to setIcon(_____.png); later
@@ -47,13 +49,12 @@ Window::Window() : QWidget()
 	m_delete = new QAction(tr("Delete"));
 
 	
-	m_menubar->addMenu(m_filemenu);
-	m_menubar->addMenu(m_newmenu);
-	m_menubar->addMenu(m_importmenu);
-	m_menubar->addMenu(m_printmenu);
-	m_menubar->addMenu(m_savemenu);
+	m_menu->addAction(m_newmenu);
+	m_menu->addAction(m_importmenu);
+	m_menu->addAction(m_printmenu);
+	m_menu->addAction(m_savemenu);
 
-	m_menubar->addSeparator();	
+	m_menu->addSeparator();	
 	
 	//Morgan Magner     9/15
 	//m_toolbar will be the "second menu" if you will. It is used to hold options such as
@@ -84,10 +85,9 @@ Window::Window() : QWidget()
 	//This is a sloppy way of handling it right now requiring some duplication of effort; refactor if we have the time
     //Alexander Wiecking, 9/15
 	
-	m_canvas->setScene(m_scene);	
-	m_layout->addWidget(m_menubar);
-	m_layout->addWidget(m_canvas);
-	this->setLayout(m_layout);
+	setCentralWidget(m_canvas);
+	
+	//this->setLayout(m_layout);
 	this->show();
 	
 }

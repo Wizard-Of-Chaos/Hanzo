@@ -5,9 +5,9 @@
 class Canvas : public QGraphicsView
 {
 	private:
-		int* m_selected_tool; //Pointer to the int in the Window class determining tool
+		int m_selected_tool; //Pointer to the int in the Window class determining tool
 	public:
-		Canvas(int* tool);
+		Canvas();
 		void mousePressEvent(QMouseEvent* event);
 };
 

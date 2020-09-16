@@ -5,9 +5,9 @@
 #include <QBrush>
 #include <QDrag>
 
-Canvas::Canvas(int* tool) : QGraphicsView()
+Canvas::Canvas() : QGraphicsView(), m_selected_tool {1}
 {
-	m_selected_tool = tool;
+
 } // should probably add canvas dimensions later
 //Also what gets setup here is the tool thing.
 
@@ -19,8 +19,7 @@ void Canvas::mousePressEvent(QMouseEvent *event)
 	qreal y = q.y();
 	QPen drawPen(Qt::black);
 	drawPen.setWidth(2);
-	int tool = *m_selected_tool;
-	switch(tool)
+	switch(m_selected_tool)
 	{
 		case 0:
 			{
