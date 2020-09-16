@@ -5,7 +5,7 @@
 #include <QBrush>
 #include <QDrag>
 
-Canvas::Canvas() : QGraphicsView(), m_selected_tool {1}
+Canvas::Canvas() : QGraphicsView(), m_selected_tool {0}
 {
 
 } // should probably add canvas dimensions later
