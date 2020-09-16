@@ -16,7 +16,7 @@ class QMenu;
 
 class Window : public QMainWindow
 {
-	Q_OBJECT
+  	Q_OBJECT
 	private:
 		QGraphicsScene* m_scene;
 		Canvas* m_canvas;
@@ -35,9 +35,6 @@ class Window : public QMainWindow
 		QAction* m_delete;
         
         int m_selected_tool;
-    private slots: //The slots are functions that get connected to each of the options on the toolbar.
-        void change_rect();
-        void change_circle();
 	public:
 		Window();
 		~Window();

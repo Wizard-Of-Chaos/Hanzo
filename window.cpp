@@ -17,8 +17,8 @@ Window::Window() : QMainWindow()
     m_selected_tool = 0; 
 	//m_menubar = new QMenuBar(this);
     	m_menu = menuBar()->addMenu(tr("&File"));
-	//m_toolbar = new QToolBar(this);  //Morgan Magner
-	m_toolbar = addToolBar(tr("File"));
+	m_toolbar = new QToolBar(this);  //Morgan Magner
+	addToolBar(m_toolbar);
 	m_newmenu = new QAction(tr("New"));
 	m_importmenu = new QAction(tr("Import"));
 	m_printmenu = new QAction(tr("Print"));
@@ -80,8 +80,8 @@ Window::Window() : QMainWindow()
 	m_toolbar->addSeparator();  //marks the end of the toolbar
     
     //Adding some connections to a few of the widgets
-    connect(m_circle, SIGNAL(triggered()), this, SLOT(change_circle()));
-	connect(m_rect, SIGNAL(triggered()), this, SLOT(change_rect()));
+    	connect(m_circle, SIGNAL(triggered()), m_canvas, SLOT(change_circle()));
+	connect(m_rect, SIGNAL(triggered()), m_canvas, SLOT(change_rect()));
 	//This is a sloppy way of handling it right now requiring some duplication of effort; refactor if we have the time
     //Alexander Wiecking, 9/15
 	
@@ -101,14 +101,4 @@ Window::~Window()
 int Window::tool()
 {
 	return m_selected_tool;
-}
-
-void Window::change_rect()
-{
-	m_selected_tool = 0;
-}
-
-void Window::change_circle()
-{
-	m_selected_tool = 1;
 }

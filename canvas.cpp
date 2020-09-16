@@ -7,9 +7,18 @@
 
 Canvas::Canvas() : QGraphicsView(), m_selected_tool {0}
 {
-
 } // should probably add canvas dimensions later
 //Also what gets setup here is the tool thing.
+
+void Canvas::change_rect()
+{
+  m_selected_tool = 0;
+}
+
+void Canvas::change_circle()
+{
+  m_selected_tool = 1;
+}
 
 void Canvas::mousePressEvent(QMouseEvent *event)
 {
