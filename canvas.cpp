@@ -5,6 +5,13 @@
 #include <QBrush>
 #include <QDrag>
 #include <QGraphicsItem>
+#include <QInputDialog>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QHBoxLayout>
+#include <QApplication>
+#include <QDir>
 
 Canvas::Canvas() : QGraphicsView(), m_selected_tool {0}
 {
@@ -28,8 +35,9 @@ void Canvas::change_mov()
 
 void Canvas::change_del()
 {
-  m_selected_tool = 5;
+  m_selected_tool = 6;
 }
+
 
 void Canvas::mousePressEvent(QMouseEvent *event)
 {
@@ -64,7 +72,7 @@ void Canvas::mousePressEvent(QMouseEvent *event)
 				break; //Yeah, this literally does nothing except free up the cursor.
 			}
 
-		case 5: //Delete tool.
+		case 6: //Delete tool.
 			{
 				QList<QGraphicsItem*> items = scene()->selectedItems();
 				for(QGraphicsItem* i : items) {

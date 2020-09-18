@@ -11,6 +11,14 @@
 #include <QToolBar>
 #include <QToolButton>
 #include <QAction>
+#include <QInputDialog>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QHBoxLayout>
+#include <QApplication>
+#include <QDir>
+
 
 Window::Window() : QMainWindow()
 {	
@@ -84,6 +92,7 @@ Window::Window() : QMainWindow()
 	connect(m_rect, SIGNAL(triggered()), m_canvas, SLOT(change_rect()));
 	connect(m_move, SIGNAL(triggered()), m_canvas, SLOT(change_mov()));
 	connect(m_delete, SIGNAL(triggered()), m_canvas, SLOT(change_del()));
+	connect(m_savemenu, SIGNAL(triggered()), this, SLOT(save_file()));
 	//This is a sloppy way of handling it right now requiring some duplication of effort; refactor if we have the time
     //Alexander Wiecking, 9/15
 	
@@ -103,4 +112,27 @@ Window::~Window()
 int Window::tool()
 {
 	return m_selected_tool;
+}
+
+void Window::save_file()
+{
+	bool ok;
+	QString filename = QInputDialog::getText(this, tr("Save"), tr("Enter a file name:"), QLineEdit::Normal, QDir::home().dirName(), &ok);
+	QList<QGraphicsItem*> items = m_canvas->scene()->items();
+	filename = filename += tr(".hzo");
+	QFile file(filename);
+	file.open(QIODevice::WriteOnly);
+	QDataStream out(&file);
+	for (QGraphicsItem* i : items) {
+		QPointF pos = i->pos();
+		qreal height = i->boundingRect().height();
+		qreal width = i->boundingRect().width();
+		int type = i->type();
+	}
+}
+
+void Window::load_file()
+{
+	bool ok;
+	QString filename = QInputDialog::getText(this, tr("Load"), tr("Enter a file name:"), QLineEdit::Normal, QDir::home().dirName(), &ok);
 }

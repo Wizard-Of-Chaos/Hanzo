@@ -33,13 +33,16 @@ class Window : public QMainWindow
 		QAction* m_line;
 		QAction* m_move;
 		QAction* m_delete;
-        
+
         int m_selected_tool;
+	private slots:
+
+	void save_file();
+	void load_file();
 	public:
 		Window();
 		~Window();
         int tool();
-
 };
 
 #endif
