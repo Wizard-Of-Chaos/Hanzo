@@ -82,6 +82,8 @@ Window::Window() : QMainWindow()
     //Adding some connections to a few of the widgets
     	connect(m_circle, SIGNAL(triggered()), m_canvas, SLOT(change_circle()));
 	connect(m_rect, SIGNAL(triggered()), m_canvas, SLOT(change_rect()));
+	connect(m_move, SIGNAL(triggered()), m_canvas, SLOT(change_mov()));
+	connect(m_delete, SIGNAL(triggered()), m_canvas, SLOT(change_del()));
 	//This is a sloppy way of handling it right now requiring some duplication of effort; refactor if we have the time
     //Alexander Wiecking, 9/15
 	

@@ -4,6 +4,7 @@
 #include <QPen>
 #include <QBrush>
 #include <QDrag>
+#include <QGraphicsItem>
 
 Canvas::Canvas() : QGraphicsView(), m_selected_tool {0}
 {
@@ -20,6 +21,16 @@ void Canvas::change_circle()
   m_selected_tool = 1;
 }
 
+void Canvas::change_mov()
+{
+  m_selected_tool = 3;
+}
+
+void Canvas::change_del()
+{
+  m_selected_tool = 5;
+}
+
 void Canvas::mousePressEvent(QMouseEvent *event)
 {
 	QPoint start = event->pos();
@@ -30,16 +41,35 @@ void Canvas::mousePressEvent(QMouseEvent *event)
 	drawPen.setWidth(2);
 	switch(m_selected_tool)
 	{
-		case 0:
+		case 0: // Rectangle tool.
 			{
 				QRectF rect(x-60, y-40, 120, 80);
-				scene()->addRect(rect, drawPen, QBrush(Qt::black));
+				QGraphicsRectItem* r = scene()->addRect(rect, drawPen, QBrush(Qt::black));
+				r->setFlag(QGraphicsItem::ItemIsSelectable, true);
+				r->setFlag(QGraphicsItem::ItemIsMovable, true);
+				r->setCursor(Qt::PointingHandCursor);
 				break;
 			}
-		case 1:
+		case 1: // Circle tool.
 			{
 				QRectF rect(x-60, y-60, 120, 120);
-				scene()->addEllipse(rect, drawPen, QBrush(Qt::black));
+				QGraphicsEllipseItem* r = scene()->addEllipse(rect, drawPen, QBrush(Qt::black));
+				r->setFlag(QGraphicsItem::ItemIsSelectable, true);
+				r->setFlag(QGraphicsItem::ItemIsMovable, true);
+				r->setCursor(Qt::PointingHandCursor);
+				break;
+			}
+		case 3: //Selection tool.
+			{
+				break; //Yeah, this literally does nothing except free up the cursor.
+			}
+
+		case 5: //Delete tool.
+			{
+				QList<QGraphicsItem*> items = scene()->selectedItems();
+				for(QGraphicsItem* i : items) {
+					scene()->removeItem(i);
+				}
 				break;
 			}
 		default:
