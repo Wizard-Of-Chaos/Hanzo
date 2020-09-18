@@ -11,10 +11,14 @@ class Canvas : public QGraphicsView
 	private slots: //The slots are functions that get connected to each of the options on the toolbar.
 	  void change_rect();
 	  void change_circle();
+	  void change_triangle();
+	  void change_line();
 
 	public:
 		Canvas();
 		void mousePressEvent(QMouseEvent* event);
+		int linex;
+		int liney;
 };
 
 #endif

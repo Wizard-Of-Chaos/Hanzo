@@ -15,7 +15,6 @@
 Window::Window() : QMainWindow()
 {	
     m_selected_tool = 0; 
-	//m_menubar = new QMenuBar(this);
     	m_menu = menuBar()->addMenu(tr("&File"));
 	m_toolbar = new QToolBar(this);  //Morgan Magner
 	addToolBar(m_toolbar);
@@ -28,19 +27,6 @@ Window::Window() : QMainWindow()
 
 	m_canvas->setScene(m_scene);
         
-/*	m_rect = new QToolButton();  //Morgan Magner   -- start of QToolBar
-	m_rect->setIcon(Rectangle.png);  //change to setIcon(_____.png); later
-        m_circle = new QToolButton();
-	m_circle->setIcon(Rectangle.png);  //Change Later
-        m_triangle = new QToolButton();
-	m_triangle->setIcon(Rectangle.png); //Change Later 
-        m_line = new QToolButton();
-	m_line->setIcon(Rectangle.png);  //Change Later
-        m_move = new QToolButton();
-	m_move->setIcon(Rectangle.png);
-        m_delete = new QToolButton();
-	m_delete->setIcon(Rectangle.png);
-*/
 	m_rect = new QAction(tr("Rectangle"));
 	m_circle = new QAction(tr("Circle")); 
 	m_triangle = new QAction(tr("Triangle"));
@@ -71,23 +57,20 @@ Window::Window() : QMainWindow()
 	m_toolbar->addAction(m_line);
 	m_toolbar->addAction(m_move);
 	m_toolbar->addAction(m_delete);
-/*	m_toolbar->addWidget(m_rect);
-	m_toolbar->addWidget(m_circle);
-	m_toolbar->addWidget(m_triangle);
-	m_toolbar->addWidget(m_line);
-	m_toolbar->addWidget(m_move);
-	m_toolbar->addWidget(m_delete); */
 	m_toolbar->addSeparator();  //marks the end of the toolbar
     
     //Adding some connections to a few of the widgets
     	connect(m_circle, SIGNAL(triggered()), m_canvas, SLOT(change_circle()));
 	connect(m_rect, SIGNAL(triggered()), m_canvas, SLOT(change_rect()));
+	connect(m_triangle, SIGNAL(triggered()), m_canvas, SLOT(change_triangle()));
+	
+	connect(m_line, SIGNAL(triggered()), m_canvas, SLOT(change_line()));
+	
 	//This is a sloppy way of handling it right now requiring some duplication of effort; refactor if we have the time
     //Alexander Wiecking, 9/15
 	
 	setCentralWidget(m_canvas);
 	
-	//this->setLayout(m_layout);
 	this->show();
 	
 }

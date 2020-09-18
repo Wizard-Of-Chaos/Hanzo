@@ -1,9 +1,11 @@
 #include "canvas.h"
 #include <QPoint>
+#include <QPolygonF>
 #include <QMouseEvent>
 #include <QPen>
 #include <QBrush>
 #include <QDrag>
+#include <QLineF>
 
 Canvas::Canvas() : QGraphicsView(), m_selected_tool {0}
 {
@@ -18,6 +20,16 @@ void Canvas::change_rect()
 void Canvas::change_circle()
 {
   m_selected_tool = 1;
+}
+
+void Canvas::change_triangle()
+{
+  m_selected_tool = 2;
+}
+
+void Canvas::change_line()
+{
+  m_selected_tool =4;
 }
 
 void Canvas::mousePressEvent(QMouseEvent *event)
@@ -41,6 +53,30 @@ void Canvas::mousePressEvent(QMouseEvent *event)
 				QRectF rect(x-60, y-60, 120, 120);
 				scene()->addEllipse(rect, drawPen, QBrush(Qt::black));
 				break;
+			}
+		case 2:
+			{
+				QPolygonF m_poly;
+				m_poly << QPointF(x, y) << QPointF(x-60, y+120) << QPointF(x+60, y+120);
+				scene()->addPolygon(m_poly, drawPen,QBrush(Qt::black));
+				break;
+			}
+		case 3:
+			{
+			}
+		case 4:
+			{
+			  linex = x;
+			  liney = y;
+			  m_selected_tool = 5;
+			  break;
+			}
+		case 5:
+			{
+			  QLineF m_line (linex, liney, x, y);
+			  scene()->addLine(m_line, drawPen);
+			  m_selected_tool = 4;
+			  break;
 			}
 		default:
 			{
