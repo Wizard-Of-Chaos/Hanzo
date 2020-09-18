@@ -1,4 +1,5 @@
 #include <QGraphicsView>
+#include <QAction>
 
 #ifndef __CANVAS_H
 #define __CANVAS_H
@@ -13,6 +14,8 @@ class Canvas : public QGraphicsView
 	  void change_circle();
 	  void change_triangle();
 	  void change_line();
+	  void change_mov();
+	  void change_del();
 
 	public:
 		Canvas();

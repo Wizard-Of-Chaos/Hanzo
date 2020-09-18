@@ -11,6 +11,14 @@
 #include <QToolBar>
 #include <QToolButton>
 #include <QAction>
+#include <QInputDialog>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QHBoxLayout>
+#include <QApplication>
+#include <QDir>
+
 
 Window::Window() : QMainWindow()
 {	
@@ -63,9 +71,10 @@ Window::Window() : QMainWindow()
     	connect(m_circle, SIGNAL(triggered()), m_canvas, SLOT(change_circle()));
 	connect(m_rect, SIGNAL(triggered()), m_canvas, SLOT(change_rect()));
 	connect(m_triangle, SIGNAL(triggered()), m_canvas, SLOT(change_triangle()));
-	
 	connect(m_line, SIGNAL(triggered()), m_canvas, SLOT(change_line()));
-	
+	connect(m_move, SIGNAL(triggered()), m_canvas, SLOT(change_mov()));
+	connect(m_delete, SIGNAL(triggered()), m_canvas, SLOT(change_del()));
+	connect(m_savemenu, SIGNAL(triggered()), this, SLOT(save_file()));
 	//This is a sloppy way of handling it right now requiring some duplication of effort; refactor if we have the time
     //Alexander Wiecking, 9/15
 	
@@ -84,4 +93,27 @@ Window::~Window()
 int Window::tool()
 {
 	return m_selected_tool;
+}
+
+void Window::save_file()
+{
+	bool ok;
+	QString filename = QInputDialog::getText(this, tr("Save"), tr("Enter a file name:"), QLineEdit::Normal, QDir::home().dirName(), &ok); //Opens dialogue box
+	QList<QGraphicsItem*> items = m_canvas->scene()->items(); //Gets a list of all items on the scene
+	filename = filename += tr(".hzo"); //Sets up the filename as a file.hzo file
+	QFile file(filename); //Opens up a new file using the QFile format
+	file.open(QIODevice::WriteOnly); //Gets ready to write
+	QDataStream out(&file); //Sets up the out-stream
+	for (QGraphicsItem* i : items) { //This loop grabs all the various data about the items on the list
+		QPointF pos = i->pos();
+		qreal height = i->boundingRect().height();
+		qreal width = i->boundingRect().width();
+		int type = i->type();
+	}
+}
+
+void Window::load_file()
+{
+	bool ok;
+	QString filename = QInputDialog::getText(this, tr("Load"), tr("Enter a file name:"), QLineEdit::Normal, QDir::home().dirName(), &ok);
 }
