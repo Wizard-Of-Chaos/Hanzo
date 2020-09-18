@@ -104,16 +104,50 @@ void Window::save_file()
 	QFile file(filename); //Opens up a new file using the QFile format
 	file.open(QIODevice::WriteOnly); //Gets ready to write
 	QDataStream out(&file); //Sets up the out-stream
+	
+	QList<QGraphicsItem*> items = scene()->items();
+	
 	for (QGraphicsItem* i : items) { //This loop grabs all the various data about the items on the list
-		QPointF pos = i->pos();
-		qreal height = i->boundingRect().height();
-		qreal width = i->boundingRect().width();
-		int type = i->type();
+		qreal x = i->x();
+		qreal y = i->y();
+
+		QGraphicsLineItem* line = dynamic_cast<QGraphicsLineItem*>(i);
+
+		if (line == NULL)
+		{
+		  qreal linex = i->x();
+		  qreal liney = i->y();
+		  qreal height = i->boundingRect().height();
+		  qreal width = i->boundingRect().width();
+		  int type = i->type();
+
+		  out << type << x << y << linex << liney << height << width;
+		}
+		else
+		{
+		  qreal height = i->boundingRect().height();
+		  qreal width = i->boundingRect().width();
+		  int type = i->type();
+		  out << type << x << y << height << width;
+		}
 	}
 }
 
 void Window::load_file()
 {
 	bool ok;
+
+	qreal x;
+	qreal y;
+	qreal height;
+	qreal width;
+	int type;
+
 	QString filename = QInputDialog::getText(this, tr("Load"), tr("Enter a file name:"), QLineEdit::Normal, QDir::home().dirName(), &ok);
+	QFile& loadMe(filename); //tells the program to set the file to the specified file
+	QDataStream in(loadMe);
+	/*while (!loadMe.atEnd()) //loops while it isn't at the end of the file
+	{
+
+	}*/
 }
