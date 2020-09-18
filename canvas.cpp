@@ -30,7 +30,6 @@ void Canvas::change_circle()
   m_selected_tool = 1;
 }
 
-<<<<<<< HEAD
 void Canvas::change_triangle()
 {
   m_selected_tool = 2;
@@ -92,14 +91,14 @@ void Canvas::mousePressEvent(QMouseEvent *event)
 			{
 				break; //Yeah, this literally does nothing except free up the cursor.
 			}
-		case 4: //Line tool
+		case 4: //Line tool part 1
 			{
 			  linex = x;
 			  liney = y;  //last two lines set the first points
 			  m_selected_tool = 5; //sets the tool to the second part of the line tool
 			  break;
 			}
-		case 5: //Line tool
+		case 5: //Line tool part 2
 			{
 			  QLineF m_line (linex, liney, x, y); //sets line to both clicks
 			  scene()->addLine(m_line, drawPen);
