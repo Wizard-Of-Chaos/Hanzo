@@ -117,13 +117,13 @@ int Window::tool()
 void Window::save_file()
 {
 	bool ok;
-	QString filename = QInputDialog::getText(this, tr("Save"), tr("Enter a file name:"), QLineEdit::Normal, QDir::home().dirName(), &ok);
-	QList<QGraphicsItem*> items = m_canvas->scene()->items();
-	filename = filename += tr(".hzo");
-	QFile file(filename);
-	file.open(QIODevice::WriteOnly);
-	QDataStream out(&file);
-	for (QGraphicsItem* i : items) {
+	QString filename = QInputDialog::getText(this, tr("Save"), tr("Enter a file name:"), QLineEdit::Normal, QDir::home().dirName(), &ok); //Opens dialogue box
+	QList<QGraphicsItem*> items = m_canvas->scene()->items(); //Gets a list of all items on the scene
+	filename = filename += tr(".hzo"); //Sets up the filename as a file.hzo file
+	QFile file(filename); //Opens up a new file using the QFile format
+	file.open(QIODevice::WriteOnly); //Gets ready to write
+	QDataStream out(&file); //Sets up the out-stream
+	for (QGraphicsItem* i : items) { //This loop grabs all the various data about the items on the list
 		QPointF pos = i->pos();
 		qreal height = i->boundingRect().height();
 		qreal width = i->boundingRect().width();
