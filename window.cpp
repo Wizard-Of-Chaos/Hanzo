@@ -22,6 +22,16 @@
 #include <QPrinter>
 #include <QTextStream>
 #include <QGraphicsPolygonItem>
+#include <QMessageBox>
+#include <fstream>
+#include <sstream>
+#include <string>
+
+//You ever wonder how many of these includes are unnecessary?
+//So do I, but I fear to remove them.
+//Are you ready to face your own #include demons?
+//It has... little bearing on the following code, I'm more just inquiring.
+//-Alexander Wiecking
 
 Window::Window() : QMainWindow()
 {	
@@ -78,7 +88,9 @@ Window::Window() : QMainWindow()
 	connect(m_move, SIGNAL(triggered()), m_canvas, SLOT(change_mov()));
 	connect(m_delete, SIGNAL(triggered()), m_canvas, SLOT(change_del()));
 	connect(m_savemenu, SIGNAL(triggered()), this, SLOT(save_file()));
+	connect(m_importmenu, SIGNAL(triggered()), this, SLOT(load_file()));
 	connect(m_printmenu, SIGNAL(triggered()), this, SLOT(print_file()));
+	connect(m_newmenu, SIGNAL(triggered()), this, SLOT(new_file()));
 	//This is a sloppy way of handling it right now requiring some duplication of effort; refactor if we have the time
     //Alexander Wiecking, 9/15
 	
@@ -109,7 +121,6 @@ void Window::save_file()
 	file.open(QIODevice::WriteOnly); //Gets ready to write
 	QTextStream out(&file); //Sets up the out-stream
 	for (QGraphicsItem* i : items) { //This loop grabs all the various data about the items on the list
-		QPointF pos = i->pos();
 		qreal height = i->boundingRect().height();
 		qreal width = i->boundingRect().width();
 		
@@ -152,8 +163,10 @@ void Window::save_file()
 		{
 			//I'm a triangle!
 		  	out << QString("Triangle ");
-			out << height << QString(" ");
-			out << width << QString(" ");
+			for(int i = 0; i < triangle->polygon().size(); ++i) {
+				QPointF p = triangle->polygon()[i];
+				out << p.x() << QString(" ") << p.y() << QString(" ");
+			}
 			out << QString("\n");
 		}
 
@@ -167,6 +180,63 @@ void Window::load_file()
 {
 	bool ok;
 	QString filename = QInputDialog::getText(this, tr("Load"), tr("Enter a file name:"), QLineEdit::Normal, QDir::home().dirName(), &ok);
+	filename += QString(".hzo");
+	QList<QGraphicsItem*> items = m_canvas->scene()->items();
+	for (QGraphicsItem* i : items) {
+		m_canvas->scene()->removeItem(i);
+	} //Clears the old canvas.
+	QList<QGraphicsItem*> new_items;
+
+	std::ifstream in(filename.toStdString());
+	if (!in.fail()) {
+		std::string line;
+		QPen drawPen(Qt::black);
+		drawPen.setWidth(2);
+		while (getline(in, line)) {
+			std::stringstream ss(line);
+			std::string chunk;
+			ss >> chunk;
+			if (chunk == "Rect") {
+				int height, width, x, y;
+				ss >> height >> width >> x >> y;
+				QRectF rect(x, y, width, height);
+				QGraphicsRectItem* r = m_canvas->scene()->addRect(rect, drawPen, QBrush(Qt::black));
+				r->setFlag(QGraphicsItem::ItemIsSelectable, true);
+				r->setFlag(QGraphicsItem::ItemIsMovable, true);
+				r->setCursor(Qt::PointingHandCursor);
+			} else if (chunk == "Circle") {
+				int height, width, x, y;
+				ss >> height >> width >> x >> y;
+				QRectF rect(x, y, width, height);
+				QGraphicsEllipseItem* r = m_canvas->scene()->addEllipse(rect, drawPen, QBrush(Qt::black));
+				r->setFlag(QGraphicsItem::ItemIsSelectable, true);
+				r->setFlag(QGraphicsItem::ItemIsMovable, true);
+				r->setCursor(Qt::PointingHandCursor);
+			} else if (chunk == "Line") {
+				int x1, y1, x2, y2;
+				ss >> x1 >> y1 >> x2 >> y2;
+				QLineF line(x1, y1, x2, y2);
+				QGraphicsLineItem* l = m_canvas->scene()->addLine(line, drawPen);
+				l->setFlag(QGraphicsItem::ItemIsSelectable, true);
+				l->setFlag(QGraphicsItem::ItemIsMovable, true);
+				l->setCursor(Qt::PointingHandCursor);
+			} else if (chunk == "Triangle") {
+				int x1, y1, x2, y2, x3, y3;
+				ss >> x1 >> y1 >> x2 >> y2 >> x3 >> y3;
+				QPolygonF poly;
+				poly << QPointF(x1, y1) << QPointF(x2, y2) << QPointF(x3, y3);
+				QGraphicsPolygonItem* p = m_canvas->scene()->addPolygon(poly, drawPen, QBrush(Qt::black));
+				p->setFlag(QGraphicsItem::ItemIsSelectable, true);
+				p->setFlag(QGraphicsItem::ItemIsMovable, true);
+				p->setCursor(Qt::PointingHandCursor);
+			}
+		}
+	} else {
+		QMessageBox errormsg;
+                errormsg.setWindowTitle("Error opening file");
+                errormsg.setText("Could not open file. Make sure you didn't add a file extension.");
+                errormsg.exec();
+	}
 	//filename 
 }
 
@@ -184,6 +254,12 @@ void Window::print_file() //Michael Eddins
 	myPainter.end();
 }
 
-
+void Window::new_file()
+{
+	QList<QGraphicsItem*> items = m_canvas->scene()->items();
+	for (QGraphicsItem* i : items) {
+		m_canvas->scene()->removeItem(i);
+	} //Clears the old canvas.
+}
 
 

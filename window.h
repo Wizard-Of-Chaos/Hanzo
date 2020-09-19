@@ -40,6 +40,7 @@ class Window : public QMainWindow
 	void save_file();
 	void load_file();
 	void print_file();
+	void new_file();
 	
 	public:
 		Window();
