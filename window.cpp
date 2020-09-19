@@ -21,6 +21,7 @@
 #include <QDir>
 #include <QPrinter>
 #include <QTextStream>
+#include <QGraphicsPolygonItem>
 
 Window::Window() : QMainWindow()
 {	
@@ -111,7 +112,6 @@ void Window::save_file()
 		QPointF pos = i->pos();
 		qreal height = i->boundingRect().height();
 		qreal width = i->boundingRect().width();
-		int type = i->type();
 		
 		QGraphicsRectItem* rect = dynamic_cast<QGraphicsRectItem *>(i);
 		if (rect != nullptr)
@@ -120,7 +120,7 @@ void Window::save_file()
 		  	out << QString("Rect ");
 			out << height << QString(" ");
 			out << width << QString(" ");
-			out << pos.x() << QString(" ") << pos.y() << QString("\n");
+			out << rect->rect().x() << QString(" ") << rect->rect().y() << QString("\n");
 		}
 		
 		
@@ -131,7 +131,7 @@ void Window::save_file()
 		  	out << QString("Circle ");
 			out << height << QString(" ");
 			out << width << QString(" ");
-			out << pos.x() << QString(" ") << pos.y() <<  QString("\n");
+			out << circle->rect().x() << QString(" ") << circle->rect().y() <<  QString("\n");
 
 		}
 
@@ -139,10 +139,11 @@ void Window::save_file()
 		if (line != nullptr)
 		{
 			//I'm a line!
+			QPointF p1 = line->line().p1();
+			QPointF p2 = line->line().p2();
 		  	out << QString("Line ");
-			out << height << QString(" ");
-			out << width << QString(" ");
-			out << pos.x() << QString(" ") << pos.y() << QString("\n");
+			out << p1.x() << QString(" ") <<  p1.y() << QString(" ") << p2.x() << QString(" ") << p2.y();
+			out << QString("\n");
 		}
 
 
@@ -153,7 +154,7 @@ void Window::save_file()
 		  	out << QString("Triangle ");
 			out << height << QString(" ");
 			out << width << QString(" ");
-			out << pos.x() << QString(" ") << pos.y() << QString("\n");
+			out << QString("\n");
 		}
 
 			
