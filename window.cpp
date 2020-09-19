@@ -109,7 +109,6 @@ void Window::save_file()
 	QTextStream out(&file); //Sets up the out-stream
 	for (QGraphicsItem* i : items) { //This loop grabs all the various data about the items on the list
 		QPointF pos = i->pos();
-
 		qreal height = i->boundingRect().height();
 		qreal width = i->boundingRect().width();
 		int type = i->type();
@@ -119,9 +118,9 @@ void Window::save_file()
 		{
 			//I'm a rectangle!
 		  	out << QString("Rect ");
-			out << rect->rect().width() << QString(" ");
-			out << rect->rect().height() << QString(" ");
-			out << rect->rect().x() << QString(" ") << rect->rect().y() << QString("\n");
+			out << height << QString(" ");
+			out << width << QString(" ");
+			out << pos.x() << QString(" ") << pos.y() << QString("\n");
 		}
 		
 		
@@ -129,10 +128,10 @@ void Window::save_file()
 		if (circle != nullptr)
 		{
 			//I'm a circle!
-		  	out << QString("Circle\n");
-			out << circle->rect().width() << QString(" ");
-			out << circle->rect().height() << QString(" ");
-			out << circle->rect().x() << QString(" ") << QString("\n");
+		  	out << QString("Circle ");
+			out << height << QString(" ");
+			out << width << QString(" ");
+			out << pos.x() << QString(" ") << pos.y() <<  QString("\n");
 
 		}
 
@@ -140,15 +139,21 @@ void Window::save_file()
 		if (line != nullptr)
 		{
 			//I'm a line!
-		  	out << QString("Line\n");
-		//	out << line->line().x1() << QString(",") << line->line()y1 << QString(" ") << line->line().x2() << QString(",") << line->line.y2 << QString("\n")
-		}  //HERE'S WHERE I STOPPED, THIS DOESN'T WORK
+		  	out << QString("Line ");
+			out << height << QString(" ");
+			out << width << QString(" ");
+			out << pos.x() << QString(" ") << pos.y() << QString("\n");
+		}
+
 
 		QGraphicsPolygonItem* triangle = dynamic_cast<QGraphicsPolygonItem *>(i);
 		if (triangle != nullptr)
 		{
 			//I'm a triangle!
-		  	out << QString("Triangle\n");
+		  	out << QString("Triangle ");
+			out << height << QString(" ");
+			out << width << QString(" ");
+			out << pos.x() << QString(" ") << pos.y() << QString("\n");
 		}
 
 			

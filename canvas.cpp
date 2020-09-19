@@ -84,7 +84,10 @@ void Canvas::mousePressEvent(QMouseEvent *event)
 			{
 			  QPolygonF m_poly;
 			  m_poly << QPointF(x, y) << QPointF(x-60, y+120) << QPointF(x+60, y+120);
-			  scene()->addPolygon(m_poly, drawPen,QBrush(Qt::black));
+			  QGraphicsPolygonItem* p = scene()->addPolygon(m_poly, drawPen,QBrush(Qt::black));
+			  p->setFlag(QGraphicsItem::ItemIsSelectable, true);
+			  p->setFlag(QGraphicsItem::ItemIsMovable, true);
+			  p->setCursor(Qt::PointingHandCursor);
 			  break;
 			}
 
@@ -102,8 +105,12 @@ void Canvas::mousePressEvent(QMouseEvent *event)
 		case 5: //Line tool part 2
 			{
 			  QLineF m_line (linex, liney, x, y); //sets line to both clicks
-			  scene()->addLine(m_line, drawPen);
+			  QGraphicsLineItem* l = scene()->addLine(m_line, drawPen);
+			  l->setFlag(QGraphicsItem::ItemIsSelectable, true);
+			  l->setFlag(QGraphicsItem::ItemIsMovable, true);
+			  l->setCursor(Qt::PointingHandCursor);
 			  m_selected_tool = 4; //sets back to 4 in case they decide to make more lines
+
 			  break;
 			}
                 case 6: //Delete tool.
