@@ -39,6 +39,8 @@ class Window : public QMainWindow
 
 	void save_file();
 	void load_file();
+	void print_file();
+	
 	public:
 		Window();
 		~Window();

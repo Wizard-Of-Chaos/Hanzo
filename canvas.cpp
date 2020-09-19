@@ -14,6 +14,7 @@
 #include <QHBoxLayout>
 #include <QApplication>
 #include <QDir>
+#include <QPrinter>
 
 Canvas::Canvas() : QGraphicsView(), m_selected_tool {0}
 {

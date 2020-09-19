@@ -1,3 +1,4 @@
+#include <iostream>
 #include "window.h"
 #include "canvas.h"
 #include <QGraphicsScene>
@@ -18,7 +19,8 @@
 #include <QHBoxLayout>
 #include <QApplication>
 #include <QDir>
-
+#include <QPrinter>
+#include <QTextStream>
 
 Window::Window() : QMainWindow()
 {	
@@ -41,7 +43,7 @@ Window::Window() : QMainWindow()
 	m_line = new QAction(tr("Line"));
 	m_move = new QAction(tr("Move"));
 	m_delete = new QAction(tr("Delete"));
-
+	
 	
 	m_menu->addAction(m_newmenu);
 	m_menu->addAction(m_importmenu);
@@ -75,6 +77,7 @@ Window::Window() : QMainWindow()
 	connect(m_move, SIGNAL(triggered()), m_canvas, SLOT(change_mov()));
 	connect(m_delete, SIGNAL(triggered()), m_canvas, SLOT(change_del()));
 	connect(m_savemenu, SIGNAL(triggered()), this, SLOT(save_file()));
+	connect(m_printmenu, SIGNAL(triggered()), this, SLOT(print_file()));
 	//This is a sloppy way of handling it right now requiring some duplication of effort; refactor if we have the time
     //Alexander Wiecking, 9/15
 	
@@ -103,51 +106,78 @@ void Window::save_file()
 	filename = filename += tr(".hzo"); //Sets up the filename as a file.hzo file
 	QFile file(filename); //Opens up a new file using the QFile format
 	file.open(QIODevice::WriteOnly); //Gets ready to write
-	QDataStream out(&file); //Sets up the out-stream
-	
-	QList<QGraphicsItem*> items = scene()->items();
-	
+	QTextStream out(&file); //Sets up the out-stream
 	for (QGraphicsItem* i : items) { //This loop grabs all the various data about the items on the list
-		qreal x = i->x();
-		qreal y = i->y();
+		QPointF pos = i->pos();
 
-		QGraphicsLineItem* line = dynamic_cast<QGraphicsLineItem*>(i);
-
-		if (line == NULL)
+		qreal height = i->boundingRect().height();
+		qreal width = i->boundingRect().width();
+		int type = i->type();
+		
+		QGraphicsRectItem* rect = dynamic_cast<QGraphicsRectItem *>(i);
+		if (rect != nullptr)
 		{
-		  qreal linex = i->x();
-		  qreal liney = i->y();
-		  qreal height = i->boundingRect().height();
-		  qreal width = i->boundingRect().width();
-		  int type = i->type();
-
-		  out << type << x << y << linex << liney << height << width;
+			//I'm a rectangle!
+		  	out << QString("Rect ");
+			out << rect->rect().width() << QString(" ");
+			out << rect->rect().height() << QString(" ");
+			out << rect->rect().x() << QString(" ") << rect->rect().y() << QString("\n");
 		}
-		else
+		
+		
+		QGraphicsEllipseItem* circle = dynamic_cast<QGraphicsEllipseItem *>(i);
+		if (circle != nullptr)
 		{
-		  qreal height = i->boundingRect().height();
-		  qreal width = i->boundingRect().width();
-		  int type = i->type();
-		  out << type << x << y << height << width;
+			//I'm a circle!
+		  	out << QString("Circle\n");
+			out << circle->rect().width() << QString(" ");
+			out << circle->rect().height() << QString(" ");
+			out << circle->rect().x() << QString(" ") << QString("\n");
+
 		}
+
+		QGraphicsLineItem* line = dynamic_cast<QGraphicsLineItem *>(i);
+		if (line != nullptr)
+		{
+			//I'm a line!
+		  	out << QString("Line\n");
+		//	out << line->line().x1() << QString(",") << line->line()y1 << QString(" ") << line->line().x2() << QString(",") << line->line.y2 << QString("\n")
+		}  //HERE'S WHERE I STOPPED, THIS DOESN'T WORK
+
+		QGraphicsPolygonItem* triangle = dynamic_cast<QGraphicsPolygonItem *>(i);
+		if (triangle != nullptr)
+		{
+			//I'm a triangle!
+		  	out << QString("Triangle\n");
+		}
+
+			
 	}
+			  
 }
+
 
 void Window::load_file()
 {
 	bool ok;
-
-	qreal x;
-	qreal y;
-	qreal height;
-	qreal width;
-	int type;
-
 	QString filename = QInputDialog::getText(this, tr("Load"), tr("Enter a file name:"), QLineEdit::Normal, QDir::home().dirName(), &ok);
-	QFile& loadMe(filename); //tells the program to set the file to the specified file
-	QDataStream in(loadMe);
-	/*while (!loadMe.atEnd()) //loops while it isn't at the end of the file
-	{
-
-	}*/
+	//filename 
 }
+
+void Window::print_file() //Michael Eddins
+{
+	bool ok; 
+	
+	QPainter myPainter;
+	QString pdfname = QInputDialog::getText(this, tr("Print to PDF"), tr("Enter name to save PDF as:"), QLineEdit::Normal, "" , &ok); //Dialogue box for getting name to save PDF as.
+	QPrinter printer(QPrinter::HighResolution); //Sets pdf as being a high resolution image
+	printer.setOutputFormat(QPrinter::PdfFormat); //Ensures that QPrinter knows that it is a PDF
+	printer.setOutputFileName(QDir::currentPath() + tr("/") + pdfname + tr(".pdf")); // Sets the pdf to be saved in the current directory as the previously submitted name.
+	myPainter.begin(&printer);
+	m_canvas->scene()->render(&myPainter); //Draw stuff
+	myPainter.end();
+}
+
+
+
+
