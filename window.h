@@ -33,6 +33,7 @@ class Window : public QMainWindow
 		QAction* m_line;
 		QAction* m_move;
 		QAction* m_delete;
+		QAction* m_quit;
 
         int m_selected_tool;
 	private slots:

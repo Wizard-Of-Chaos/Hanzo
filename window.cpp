@@ -40,9 +40,10 @@ Window::Window() : QMainWindow()
 	m_toolbar = new QToolBar(this);  //Morgan Magner
 	addToolBar(m_toolbar);
 	m_newmenu = new QAction(tr("New"));
-	m_importmenu = new QAction(tr("Import"));
+	m_importmenu = new QAction(tr("Open"));
 	m_printmenu = new QAction(tr("Print"));
 	m_savemenu = new QAction(tr("Save"));
+	m_quit = new QAction(tr("Quit"));
 	m_scene = new QGraphicsScene(this);
 	m_canvas = new Canvas;
 
@@ -60,6 +61,7 @@ Window::Window() : QMainWindow()
 	m_menu->addAction(m_importmenu);
 	m_menu->addAction(m_printmenu);
 	m_menu->addAction(m_savemenu);
+	m_menu->addAction(m_quit);
 
 	m_menu->addSeparator();	
 	
@@ -91,6 +93,7 @@ Window::Window() : QMainWindow()
 	connect(m_importmenu, SIGNAL(triggered()), this, SLOT(load_file()));
 	connect(m_printmenu, SIGNAL(triggered()), this, SLOT(print_file()));
 	connect(m_newmenu, SIGNAL(triggered()), this, SLOT(new_file()));
+	connect(m_quit, SIGNAL(triggered()), this, SLOT(close()));
 	//This is a sloppy way of handling it right now requiring some duplication of effort; refactor if we have the time
     //Alexander Wiecking, 9/15
 	
@@ -261,5 +264,4 @@ void Window::new_file()
 		m_canvas->scene()->removeItem(i);
 	} //Clears the old canvas.
 }
-
 
