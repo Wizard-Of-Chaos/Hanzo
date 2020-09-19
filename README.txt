@@ -5,8 +5,8 @@ A few key functions to Hanzo:
 1. Circle, Triangle, and Rectangle all only require one click
 2. Line requires 2 clicks; one for the start of the line and one for the end
 3. If you would like to delete an item you drew, select the "delete" tool and double click the itme
-4. If you would like to move an item, click and drag
-
+4. If you would like to move an item, click and drag, this might be a little sticky though
+5. When saving and loading files - do not add the file extension, simply type in the name. Files will be saved as file.hzo.
 
 ----------------------------------------------------------------------------------------
 Michael Eddins
